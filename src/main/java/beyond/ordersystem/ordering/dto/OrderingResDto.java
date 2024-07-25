@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 
 @Getter
-@Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderingResDto {
-    private
+    private Long orderingid;
+    private String memberEmail;
 }

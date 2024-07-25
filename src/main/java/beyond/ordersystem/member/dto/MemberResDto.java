@@ -15,6 +15,4 @@ public class MemberResDto {
     private String name;
     private String email;
     private Address address;
-
-
 }
