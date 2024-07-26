@@ -22,7 +22,7 @@ dependencies {
 	// 주로, dto 값 검증을 위한 어노테이션 제공
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

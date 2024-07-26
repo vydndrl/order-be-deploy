@@ -24,9 +24,10 @@ public class Member extends BaseTimeEntity {
 
     private String password;
 
-    @Column(columnDefinition = "ENUM('ADMIN', 'USER') DEFAULT 'USER'")
+//    @Column(columnDefinition = "ENUM('ADMIN', 'USER') DEFAULT 'USER'")
+    @Builder.Default
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER;
 
     @Embedded
     private Address address;

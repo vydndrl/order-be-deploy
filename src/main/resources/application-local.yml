@@ -14,7 +14,7 @@ spring:
     database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 mybatis:
   mapper-locations: classpath:/mapper/**/*.xml

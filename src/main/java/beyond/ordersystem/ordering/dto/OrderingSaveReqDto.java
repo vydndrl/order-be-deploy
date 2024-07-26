@@ -8,25 +8,31 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.relational.core.sql.In;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class OrderingSaveReqDto {
     private Long memberId;
-    private List<OrderDetailDto> orderDetailDtoList;
+    private List<OrderDto> orderList;
 
     @Data
-    @AllArgsConstructor
     @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
-    public static class OrderDetailDto{
+    public static class OrderDto{
         private Long productId;
         private Integer productCount;
     }
 
+    public Ordering toEntity(Member member){
+        return Ordering.builder()
+                .member(member)
+                .build();
+    }
 }
