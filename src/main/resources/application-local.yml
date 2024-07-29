@@ -16,6 +16,9 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+  redis:
+    host: localhost
+    port: 6379
 mybatis:
   mapper-locations: classpath:/mapper/**/*.xml
 
@@ -25,3 +28,5 @@ logging:
 jwt:
   expiration: 30
   secretKey: my_token_secret
+  expirationRt: 14400
+  secretKeyRt: my_token_secret_rt

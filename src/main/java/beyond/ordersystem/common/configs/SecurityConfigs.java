@@ -19,10 +19,6 @@ public class SecurityConfigs {
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
 
-    @Bean
-    public PasswordEncoder makePassword(){
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -32,7 +28,7 @@ public class SecurityConfigs {
                 .cors().and()   // CORS 활성화
                 .httpBasic().disable()
                 .authorizeRequests()    // 어떤 urL 패턴에서 로그인을 안 할 것인지
-                    .antMatchers("/member/create", "/", "/doLogin")
+                    .antMatchers("/member/create", "/", "/doLogin", "/refresh-token")
                     .permitAll()
                 .anyRequest().authenticated()
                 .and()
