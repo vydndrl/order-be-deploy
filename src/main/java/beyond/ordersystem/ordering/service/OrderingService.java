@@ -3,6 +3,7 @@ package beyond.ordersystem.ordering.service;
 import beyond.ordersystem.member.domain.Member;
 import beyond.ordersystem.member.repository.MemberRepository;
 import beyond.ordersystem.ordering.domain.OrderDetail;
+import beyond.ordersystem.ordering.domain.OrderStatus;
 import beyond.ordersystem.ordering.domain.Ordering;
 import beyond.ordersystem.ordering.dto.OrderingSaveReqDto;
 import beyond.ordersystem.ordering.dto.OrderingListResDto;
@@ -13,6 +14,7 @@ import beyond.ordersystem.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -58,15 +60,19 @@ public class OrderingService {
 //    }
 
     //      방법 2. JPA에 최적화된 방식
-    public Ordering orderingCreate(@ModelAttribute OrderingSaveReqDto dto) {
-        Member member = memberRepository.findById(dto.getMemberId()).orElseThrow(() -> new EntityNotFoundException("없음"));
+    public Ordering orderingCreate(List<OrderingSaveReqDto> dtos) {
+//        Member member = memberRepository.findById(dto.getMemberId()).orElseThrow(() -> new EntityNotFoundException("없음"));
+        // * 이 한 줄 외우기 ) 시큐리티컨텍스트 안에 어센티케이션이 있고 겟 네임을 하면 이메일이 나옴
+        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findByEmail(memberEmail).orElseThrow(()-> new EntityNotFoundException("member is not found"));
+
         Ordering ordering = Ordering.builder()
                 .member(member)
                 .build();
 
-        for (OrderingSaveReqDto.OrderDto orderDto : dto.getOrderList()) {
-            Product product = productRepository.findById(orderDto.getProductId()).orElseThrow(() -> new EntityNotFoundException("없음"));
-            int quantity = orderDto.getProductCount();
+        for (OrderingSaveReqDto dto : dtos) {
+            Product product = productRepository.findById(dto.getProductId()).orElseThrow(() -> new EntityNotFoundException("없음"));
+            int quantity = dto.getProductCount();
             if(product.getStockQuantity() < quantity){
                 throw new IllegalArgumentException("재고가 부족합니다");
             }
@@ -92,6 +98,22 @@ public class OrderingService {
             orderingListResDtos.add(ordering.fromEntity());
         }
         return orderingListResDtos;
+    }
+
+    public List<OrderingListResDto> myOrderingList(){
+        Member member = memberRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(()-> new EntityNotFoundException("존재하지 않는 이메일입니다."));
+        List<Ordering> orderings = orderingRepository.findByMemberId(member.getId());
+        List<OrderingListResDto> orderingListResDtos = new ArrayList<>();
+        for  (Ordering ordering : orderings){
+            orderingListResDtos.add(ordering.fromEntity());
+        }
+        return orderingListResDtos;
+    }
+
+    public Ordering cancelOrdering(Long orderingId){
+        Ordering ordering = orderingRepository.findById(orderingId).orElseThrow(()->new EntityNotFoundException("존재하지 않는 주문 번호입니다"));
+        ordering.updateStatus(OrderStatus.CANCELED);
+        return ordering;
     }
 
 }

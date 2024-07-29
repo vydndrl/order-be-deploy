@@ -26,15 +26,15 @@ public class MemberReqDto {
     @Size(min = 8, message = "password id minimum length is 8")
     private String password;
     private Address address;
-    private Role role;
+    private Role role = Role.USER;
 
     public Member toEntity(String password){
         return Member.builder()
                 .name(this.name)
                 .email(this.email)
                 .password(password)
-                .role(Role.USER)
-                .address(address)
+                .role(this.role)
+                .address(this.address)
                 .build();
     }
 }

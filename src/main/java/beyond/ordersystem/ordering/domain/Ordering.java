@@ -2,6 +2,7 @@ package beyond.ordersystem.ordering.domain;
 
 import beyond.ordersystem.member.domain.Member;
 import beyond.ordersystem.ordering.dto.OrderingListResDto;
+import beyond.ordersystem.ordering.dto.OrderingSaveReqDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -51,6 +52,10 @@ public class Ordering {
                 .orderStatus(this.orderStatus)
                 .orderDetailDtos(orderDetailDtos)
                 .build();
+    }
+
+    public void updateStatus(OrderStatus orderStatus){
+        this.orderStatus = orderStatus;
     }
 
 }

@@ -31,7 +31,7 @@ public class SecurityConfigs {
                 .csrf().disable()
                 .cors().and()   // CORS 활성화
                 .httpBasic().disable()
-                .authorizeRequests()
+                .authorizeRequests()    // 어떤 urL 패턴에서 로그인을 안 할 것인지
                     .antMatchers("/member/create", "/", "/doLogin")
                     .permitAll()
                 .anyRequest().authenticated()

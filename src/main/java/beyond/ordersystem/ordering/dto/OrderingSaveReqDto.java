@@ -18,21 +18,24 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class OrderingSaveReqDto {
-    private Long memberId;
-    private List<OrderDto> orderList;
+    private Long productId;
+    private Integer productCount;
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class OrderDto{
-        private Long productId;
-        private Integer productCount;
-    }
+//    private Long memberId;
+//    private List<OrderDto> orderList;
 
-    public Ordering toEntity(Member member){
-        return Ordering.builder()
-                .member(member)
-                .build();
-    }
+//    @Data
+//    @NoArgsConstructor
+//    @AllArgsConstructor
+//    @Builder
+//    public static class OrderDto{
+//        private Long productId;
+//        private Integer productCount;
+//    }
+
+//    public Ordering toEntity(){
+//        return Ordering.builder()
+//                .member(member)
+//                .build();
+//    }
 }

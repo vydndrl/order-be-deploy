@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,10 +37,19 @@ public class MemberController {
 
     }
 
+    // todo ) admin만 회원 목록 전체 조회 가능
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/member/list")
     public ResponseEntity<Object> memberList(Pageable pageable){
         Page<MemberResDto> dtos = memberService.memberList(pageable);
         return new ResponseEntity<>(new CommonResDto(HttpStatus.OK, "members are found", dtos), HttpStatus.OK);
+    }
+
+    // todo ) 본인은 본인 회원 정보만 조회 가능
+    @GetMapping("/member/myInfo")
+    public ResponseEntity<?> myInfo(){
+        MemberResDto dto = memberService.myInfo();
+        return new ResponseEntity<>(new CommonResDto(HttpStatus.OK, "member is found", dto), HttpStatus.OK);
     }
 
     @PostMapping("/doLogin")
@@ -56,4 +66,7 @@ public class MemberController {
         loginInfo.put ("token", jwtToken);
         return new ResponseEntity<>(new CommonResDto(HttpStatus.OK, "login is successful", loginInfo), HttpStatus.OK);
     }
+
+
+
 }

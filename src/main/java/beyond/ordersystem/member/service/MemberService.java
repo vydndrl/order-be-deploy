@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,11 @@ public class MemberService {
         Page<Member> members = memberRepository.findAll(pageable);
 //        return members.map((a->a.fromEntity()));
         return members.map((Member::fromEntity));
+    }
+
+    public MemberResDto myInfo(){
+        Member member = memberRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(()-> new EntityNotFoundException("존재하지 않는 이메일입니다."));
+        return member.fromEntity();
     }
 
     public Member login(MemberLoginDto dto){
