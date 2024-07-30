@@ -28,7 +28,7 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/product/create")
     public ResponseEntity<?> createProduct(@ModelAttribute ProductSaveReqDto dto){
-        Product product = productService.createProduct(dto);
+        Product product = productService.awsCreateProduct(dto);
         return new ResponseEntity<>(new CommonResDto(HttpStatus.CREATED, "product is successfully created", product), HttpStatus.CREATED);
     }
 
