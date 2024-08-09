@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -19,7 +20,9 @@ import javax.validation.constraints.Size;
 public class MemberReqDto {
 
     private String name;
+
     @NotEmpty(message = "email is essential")
+    @Email(message = "email is not valid")
     private String email;
 
     @NotEmpty(message = "password is essential")

@@ -44,11 +44,12 @@ public class OrderingController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/ordering/{id}/cancel")
+    @PatchMapping("/ordering/{id}/cancel")
     public ResponseEntity<?> cancelOrder(@PathVariable Long id){
         orderingService.cancelOrdering(id);
         return new ResponseEntity<>(new CommonResDto(HttpStatus.OK, "OK", "주문이 삭제되었습니다."), HttpStatus.OK);
     }
+
 
 
 }

@@ -1,6 +1,7 @@
 package beyond.ordersystem.product.controller;
 
 import beyond.ordersystem.common.dto.CommonResDto;
+import beyond.ordersystem.ordering.dto.ProductSearchDto;
 import beyond.ordersystem.product.domain.Product;
 import beyond.ordersystem.product.dto.ProductSaveReqDto;
 import beyond.ordersystem.product.dto.ProductResDto;
@@ -27,14 +28,14 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/product/create")
-    public ResponseEntity<?> createProduct(@ModelAttribute ProductSaveReqDto dto){
+    public ResponseEntity<?> createProduct( ProductSaveReqDto dto){
         Product product = productService.awsCreateProduct(dto);
         return new ResponseEntity<>(new CommonResDto(HttpStatus.CREATED, "product is successfully created", product), HttpStatus.CREATED);
     }
 
     @GetMapping("/product/list")
-    public ResponseEntity<?> productList(Pageable pageable) {
-        Page<ProductResDto> products = productService.productList(pageable);
+    public ResponseEntity<?> productList(ProductSearchDto searchDto, Pageable pageable) {
+        Page<ProductResDto> products = productService.productList(searchDto, pageable);
         return new ResponseEntity<>(new CommonResDto(HttpStatus.OK, "OK", products), HttpStatus.OK);
     }
 }

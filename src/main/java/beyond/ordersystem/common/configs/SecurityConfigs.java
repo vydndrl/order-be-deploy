@@ -28,7 +28,7 @@ public class SecurityConfigs {
                 .cors().and()   // CORS 활성화
                 .httpBasic().disable()
                 .authorizeRequests()    // 어떤 urL 패턴에서 로그인을 안 할 것인지
-                    .antMatchers("/member/create", "/", "/doLogin", "/refresh-token")
+                    .antMatchers("/member/create", "/", "/doLogin", "/refresh-token", "/product/list", "/member/reset-password")
                     .permitAll()
                 .anyRequest().authenticated()
                 .and()

@@ -2,6 +2,7 @@ package beyond.ordersystem.member.service;
 
 import beyond.ordersystem.member.domain.Member;
 import beyond.ordersystem.member.dto.MemberLoginDto;
+import beyond.ordersystem.member.dto.MemberPasswordUpdateDto;
 import beyond.ordersystem.member.dto.MemberReqDto;
 import beyond.ordersystem.member.dto.MemberResDto;
 import beyond.ordersystem.member.repository.MemberRepository;
@@ -69,6 +70,18 @@ public class MemberService {
         return member;
     }
 
+    @Transactional
+    public void resetPassword(MemberPasswordUpdateDto dto){
+        // email 존재 여부 검증
+        Member member = memberRepository.findByEmail(dto.getEmail()).orElseThrow(() -> new EntityNotFoundException("존재하지 않는 이메일입니다."));
+
+        // password 일치 여부 검증
+        if (!passwordEncoder.matches(dto.getAsIsPassword(), member.getPassword())){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
+        }
+
+        member.updatePassword(passwordEncoder.encode(dto.getToBePassword()));
+    }
 
 
 }

@@ -4,10 +4,7 @@ import beyond.ordersystem.common.auth.JwtTokenProvider;
 import beyond.ordersystem.common.dto.CommonErrorDto;
 import beyond.ordersystem.common.dto.CommonResDto;
 import beyond.ordersystem.member.domain.Member;
-import beyond.ordersystem.member.dto.MemberLoginDto;
-import beyond.ordersystem.member.dto.MemberRefreshDto;
-import beyond.ordersystem.member.dto.MemberReqDto;
-import beyond.ordersystem.member.dto.MemberResDto;
+import beyond.ordersystem.member.dto.*;
 import beyond.ordersystem.member.service.MemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -93,7 +90,7 @@ public class MemberController {
             // 코드를 통해 rt 검증
             claims = Jwts.parser().setSigningKey(secretKeyRt).parseClaimsJws(rt).getBody();
         } catch (Exception e){
-            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.UNAUTHORIZED, "invalid refresh token"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST, "invalid refresh token"), HttpStatus.BAD_REQUEST);
         }
 
         String email = claims.getSubject();
@@ -102,13 +99,19 @@ public class MemberController {
         // redis를 조회하여 rt 추가 검증
         Object obj = redisTemplate.opsForValue().get(email);
         if(obj == null || !obj.toString().equals(rt)) {
-            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.UNAUTHORIZED, "invalid refresh token"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST, "invalid refresh token"), HttpStatus.BAD_REQUEST);
         }
         String newAt = jwtTokenProvider.createToken(email, role);
 
         Map<String, Object> info = new HashMap<>();
         info.put ("token", newAt);
         return new ResponseEntity<>(new CommonResDto(HttpStatus.OK, "AT is renewed", info), HttpStatus.OK);
+    }
+
+    @PatchMapping("/member/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody MemberPasswordUpdateDto dto){
+        memberService.resetPassword(dto);
+        return new ResponseEntity<>(new CommonResDto(HttpStatus.OK, "password is successfully changed", dto.getEmail()), HttpStatus.OK);
     }
 
 
